@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package predictor;
+
+option go_package = "services/stream-worker/internal/rpc;rpc";
+
+service CongestionPredictor {
+  rpc PredictCongestion (PredictionRequest) returns (PredictionResponse);
+}
+
+message PredictionRequest {
+  int32 site_id = 1;
+  int32 current_occupancy = 2;
+  int32 in_rate_15m = 3;
+  int32 out_rate_15m = 4;
+  int32 hour_of_day = 5;
+  int32 day_of_week = 6;
+  bool is_weekend = 7;
+  int32 total_capacity = 8;
+}
+
+message PredictionResponse {
+  float predicted_occupancy_ratio = 1; // 0.0 - 1.0
+  string congestion_level = 2;         // LOW, MODERATE, HIGH, CRITICAL
+  bool should_alert = 3;
+  string alert_message = 4;
+}
+
